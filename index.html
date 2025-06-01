@@ -150,7 +150,7 @@
                 console.log(`Processing login for: ${userName} <${userEmail}>`);
                 
                 // Send to your Render endpoint
-                const response = await fetch('https://your-render-service.onrender.com/login-notification', {
+                const response = await fetch('https://signin-notify-render.onrender.com/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
