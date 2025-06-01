@@ -38,10 +38,24 @@
             filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.5));
         }
         
-        /* Center the Google Sign-In button */
         .g_id_signin {
             margin: 0 auto;
             display: block !important;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: none;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #38bdf8;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -72,35 +86,39 @@
                      data-width="300">
                 </div>
             </div>
+
+            <div id="status-message" class="hidden text-center mb-4 p-3 rounded-lg"></div>
             
-            <div class="text-center">
-                <p class="text-sm text-gray-400">
-                    By continuing, you agree to NextEdge Innovations' <br>
-                    <a href="https://www.nextedgeinnovations.org/terms" class="text-blue-400 hover:text-blue-300">Terms of Service</a> and 
-                    <a href="https://www.nextedgeinnovations.org/privacy" class="text-blue-400 hover:text-blue-300">Privacy Policy</a>
-                </p>
+            <div class="flex justify-center items-center gap-2">
+                <div id="spinner" class="spinner"></div>
+                <p id="loading-text" class="text-gray-400 text-sm hidden">Processing login...</p>
             </div>
         </div>
         
         <div class="bg-gray-900 bg-opacity-50 px-6 py-4 text-center border-t border-gray-800">
             <p class="text-xs text-gray-400">
                 © 2023 NextEdge Innovations. All Rights Reserved.<br>
-                <span class="text-gray-500">v2.1.0</span>
+                <span class="text-gray-500">v2.1.1</span>
             </p>
         </div>
     </div>
 
     <script>
         async function handleCredentialResponse(response) {
+            const spinner = document.getElementById('spinner');
+            const loadingText = document.getElementById('loading-text');
+            const statusMessage = document.getElementById('status-message');
+            
+            // Show loading state
+            spinner.style.display = 'block';
+            loadingText.classList.remove('hidden');
+            
             try {
                 const credential = response.credential;
                 
-                // Decode the JWT to get user info (client-side only for display)
+                // Show basic user info from the token (for debugging)
                 const payload = JSON.parse(atob(credential.split('.')[1]));
-                const userName = payload.name || "Unknown User";
-                const userEmail = payload.email;
-                
-                console.log(`User logged in: ${userName} (${userEmail})`);
+                console.log('User payload:', payload);
                 
                 // Send to your Render endpoint
                 const result = await fetch('https://signin-notify-render.onrender.com/', {
@@ -112,20 +130,31 @@
                 });
                 
                 const data = await result.json();
+                
                 if (data.success) {
+                    // Success - redirect to protected area
                     window.location.href = "https://www.nextedgeinnovations.org/protected.html";
                 } else {
-                    console.error('Notification failed, but proceeding with login');
-                    window.location.href = "https://www.nextedgeinnovations.org/protected.html";
+                    // Show error message
+                    statusMessage.textContent = 'Login successful, but notification failed. Please contact support.';
+                    statusMessage.className = 'bg-yellow-500/20 text-yellow-300';
+                    statusMessage.classList.remove('hidden');
+                    console.error('Notification failed:', data);
                 }
             } catch (error) {
-                console.error('Error:', error);
-                // Still allow login even if notification fails
-                window.location.href = "https://www.nextedgeinnovations.org/protected.html";
+                // Show error message
+                statusMessage.textContent = 'Login error. Please try again or contact support.';
+                statusMessage.className = 'bg-red-500/20 text-red-300';
+                statusMessage.classList.remove('hidden');
+                console.error('Login error:', error);
+            } finally {
+                // Hide loading state
+                spinner.style.display = 'none';
+                loadingText.classList.add('hidden');
             }
         }
         
-        // Optional: Auto focus the Google button for better UX
+        // Auto focus the Google button for better UX
         document.addEventListener('DOMContentLoaded', function() {
             const googleButton = document.querySelector('.g_id_signin');
             if (googleButton) {
