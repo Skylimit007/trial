@@ -3,33 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Secure Login | NextEdge Innovations</title>
+  <title>Sign Up | NextEdge Innovations</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <style>
-    .g_id_signin {
-      width: 100% !important;
-    }
-    .g_id_signin > div {
-      margin: 0 auto !important;
-      width: 100% !important;
-    }
-    .glow-effect {
-      box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
-      transition: box-shadow 0.3s ease;
-    }
-    .glow-effect:hover {
-      box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
-    }
     .gradient-border {
       position: relative;
       border-radius: 0.5rem;
-      transition: transform 0.3s ease;
-    }
-    .gradient-border:hover {
-      transform: translateY(-2px);
     }
     .gradient-border::before {
       content: '';
@@ -39,175 +19,134 @@
       right: -2px;
       bottom: -2px;
       background: linear-gradient(45deg, #3b82f6, #10b981, #3b82f6);
-      background-size: 200% 200%;
       border-radius: 0.6rem;
       z-index: -1;
       opacity: 0.7;
-      transition: opacity 0.3s, background-position 3s ease;
-      animation: gradientBG 3s ease infinite;
-    }
-    .gradient-border:hover::before {
-      opacity: 1;
-    }
-    .input-field {
-      transition: all 0.3s ease;
     }
     .input-field:focus {
       transform: scale(1.02);
-    }
-    .loading-spinner {
-      display: none;
-    }
-    .loading .loading-spinner {
-      display: inline-block;
-    }
-    .loading .button-text {
-      display: none;
-    }
-
-    @keyframes gradientBG {
-      0% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-      100% {
-        background-position: 0% 50%;
-      }
     }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(-20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    @keyframes fadeOut {
-      from { opacity: 1; transform: translateY(0); }
-      to { opacity: 0; transform: translateY(-20px); }
-    }
-    @keyframes pulse {
-      0%, 100% {
-        opacity: 1;
-      }
-      50% {
-        opacity: 0.5;
-      }
-    }
     .animate-fade-in {
       animation: fadeIn 0.3s ease-out forwards;
-    }
-    .animate-fade-out {
-      animation: fadeOut 0.3s ease-out forwards;
-    }
-    .animate-pulse {
-      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }
   </style>
 </head>
 <body class="min-h-screen bg-gray-900 font-['Inter'] flex items-center justify-center p-4">
   <div class="w-full max-w-md">
-    <div class="bg-gray-800 rounded-xl shadow-2xl overflow-hidden p-8 sm:p-10 border border-gray-700 transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+    <div class="bg-gray-800 rounded-xl shadow-2xl overflow-hidden p-8 sm:p-10 border border-gray-700">
       <div class="text-center mb-8">
-        <div class="flex justify-center mb-6 animate__animated animate__fadeInDown">
+        <div class="flex justify-center mb-6">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
           </svg>
         </div>
-        <h1 class="text-2xl font-bold text-white mb-2 animate__animated animate__fadeIn">Secure Authentication</h1>
-        <p class="text-gray-400 animate__animated animate__fadeIn animate__delay-1s">Access your NextEdge Innovations account</p>
+        <h1 class="text-2xl font-bold text-white mb-2">Create Account</h1>
+        <p class="text-gray-400">Join NextEdge Innovations</p>
       </div>
 
-      <div class="space-y-6">
-        <!-- Google Sign-In Button -->
-        <div id="g_id_onload"
-             data-client_id="755429138864-fkb57r7p2thout8qupf5g0281d0ef21d.apps.googleusercontent.com"
-             data-context="signin"
-             data-ux_mode="popup"
-             data-callback="handleCredentialResponse"
-             data-auto_prompt="false">
+      <form id="signupForm" class="space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="firstName" class="block text-sm font-medium text-gray-300 mb-1">First Name</label>
+            <input type="text" id="firstName" required class="w-full px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent input-field">
+          </div>
+          <div>
+            <label for="lastName" class="block text-sm font-medium text-gray-300 mb-1">Last Name</label>
+            <input type="text" id="lastName" required class="w-full px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent input-field">
+          </div>
         </div>
         
-        <div class="gradient-border animate__animated animate__fadeIn animate__delay-1s">
-          <div class="g_id_signin" 
-               data-type="standard"
-               data-shape="rectangular"
-               data-theme="outline"
-               data-text="signin_with"
-               data-size="large"
-               data-logo_alignment="left"
-               data-width="100%">
-          </div>
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
+          <input type="email" id="email" required class="w-full px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent input-field">
+        </div>
+        
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-300 mb-1">Password</label>
+          <input type="password" id="password" required minlength="8" class="w-full px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent input-field">
+          <p class="mt-1 text-xs text-gray-500">Minimum 8 characters</p>
+        </div>
+        
+        <div>
+          <label for="confirmPassword" class="block text-sm font-medium text-gray-300 mb-1">Confirm Password</label>
+          <input type="password" id="confirmPassword" required class="w-full px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent input-field">
         </div>
 
-        <div class="flex items-center animate__animated animate__fadeIn animate__delay-1s">
-          <div class="flex-1 border-t border-gray-700"></div>
-          <span class="px-4 text-gray-500 text-sm">OR</span>
-          <div class="flex-1 border-t border-gray-700"></div>
-        </div>
+        <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-medium transition duration-300 relative gradient-border mt-6">
+          <span class="button-text">Create Account</span>
+          <svg class="loading-spinner animate-spin -ml-1 mr-3 h-5 w-5 text-white absolute inset-0 m-auto hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        </button>
+      </form>
 
-        <form id="loginForm" class="space-y-4 animate__animated animate__fadeIn animate__delay-1s">
-          <div class="relative">
-            <input type="email" id="email" placeholder="Email address" required class="w-full px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent input-field">
-          </div>
-          <div class="relative">
-            <input type="password" id="password" placeholder="Password" required class="w-full px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent input-field">
-          </div>
-          <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-medium transition duration-300 glow-effect relative">
-            <span class="button-text">Continue with Email</span>
-            <svg class="loading-spinner animate-spin -ml-1 mr-3 h-5 w-5 text-white absolute inset-0 m-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-          </button>
-        </form>
+      <div class="mt-6 text-center text-sm text-gray-400">
+        <p>Already have an account? <a href="login.html" class="text-blue-400 hover:text-blue-300 font-medium hover:underline">Sign in</a></p>
       </div>
-
-      <div class="mt-6 text-center text-sm text-gray-400 animate__animated animate__fadeIn animate__delay-2s">
-        <p>Don't have an account? <a href="#" class="text-blue-400 hover:text-blue-300 font-medium hover:underline">Request access</a></p>
-        <p class="mt-2"><a href="#" class="text-blue-400 hover:text-blue-300 hover:underline">Forgot password?</a></p>
-      </div>
-    </div>
-
-    <div class="mt-6 text-center text-xs text-gray-500 animate__animated animate__fadeIn animate__delay-2s">
-      <p>© 2023 NextEdge Innovations. All rights reserved.</p>
-      <p class="mt-1">By continuing, you agree to our <a href="#" class="text-blue-400 hover:underline">Terms</a> and <a href="#" class="text-blue-400 hover:underline">Privacy Policy</a>.</p>
     </div>
   </div>
 
   <script>
-    function handleCredentialResponse(response) {
-      showNotification('Authentication successful. Redirecting...', 'success');
-      setTimeout(() => {
-        window.location.href = 'https://www.nextedgeinnovations.org/protected.html';
-      }, 2000);
-    }
-
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
+    document.getElementById('signupForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       
+      const firstName = document.getElementById('firstName').value;
+      const lastName = document.getElementById('lastName').value;
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
       const submitBtn = document.getElementById('submitBtn');
+      const spinner = submitBtn.querySelector('.loading-spinner');
+      const buttonText = submitBtn.querySelector('.button-text');
+      
+      // Validate passwords match
+      if (password !== confirmPassword) {
+        showNotification('Passwords do not match', 'error');
+        return;
+      }
       
       // Show loading state
-      submitBtn.classList.add('loading');
+      spinner.classList.remove('hidden');
+      buttonText.style.visibility = 'hidden';
       
-      // Simulate API call
-      setTimeout(() => {
-        // In a real app, you would validate credentials with your backend
-        if (email && password) {
-          showNotification('Login successful. Redirecting...', 'success');
+      try {
+        const response = await fetch('/api/auth/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            firstName,
+            lastName,
+            email,
+            password
+          }),
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          showNotification('Account created successfully! Redirecting to login...', 'success');
           setTimeout(() => {
-            window.location.href = 'https://www.nextedgeinnovations.org/protected.html';
-          }, 1500);
+            window.location.href = 'login.html';
+          }, 2000);
         } else {
-          showNotification('Invalid credentials. Please try again.', 'error');
-          submitBtn.classList.remove('loading');
+          showNotification(data.message || 'Signup failed', 'error');
         }
-      }, 1500);
+      } catch (error) {
+        showNotification('Network error. Please try again.', 'error');
+      } finally {
+        spinner.classList.add('hidden');
+        buttonText.style.visibility = 'visible';
+      }
     });
 
     function showNotification(message, type) {
-      // Remove any existing notifications first
       const existing = document.querySelector('.notification-message');
       if (existing) existing.remove();
       
@@ -224,10 +163,9 @@
       notification.innerHTML = `${icon}${message}`;
       document.body.appendChild(notification);
       
-      // Remove notification after 3 seconds
       setTimeout(() => {
         notification.classList.remove('animate-fade-in');
-        notification.classList.add('animate-fade-out');
+        notification.style.opacity = '0';
         setTimeout(() => notification.remove(), 300);
       }, 3000);
     }
