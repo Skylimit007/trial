@@ -1,0 +1,16 @@
+{
+  "name": "next-edge-innovations",
+  "version": "1.0.0",
+  "description": "Next Edge Innovations Website",
+  "main": "index.js",
+  "scripts": {
+    "start": "vercel dev"
+  },
+  "dependencies": {
+    "nodemailer": "^6.9.4"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}
+
