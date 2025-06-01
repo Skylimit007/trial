@@ -6,32 +6,25 @@
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
+
   <h2>Google Sign-In Demo</h2>
-  <button id="google-signin-btn">Sign in with Google</button>
+
+  <!-- Google Sign-In button container -->
+  <div id="g_id_onload"
+       data-client_id="755429138864-fkb57r7p2thout8qupf5g0281d0ef21d.apps.googleusercontent.com"
+       data-callback="handleCredentialResponse"
+       data-auto_prompt="false">
+  </div>
+
+  <div class="g_id_signin" data-type="standard"></div>
 
   <script>
-    // Initialize Google Sign-In once the script is loaded
-    window.onload = () => {
-      google.accounts.id.initialize({
-        client_id: '755429138864-fkb57r7p2thout8qupf5g0281d0ef21d.apps.googleusercontent.com',
-        callback: handleCredentialResponse
-      });
-
-      document.getElementById('google-signin-btn').addEventListener('click', () => {
-        // Show the One Tap prompt manually on button click
-        google.accounts.id.prompt(notification => {
-          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-            console.log('Prompt was not displayed or was skipped.');
-          }
-        });
-      });
-    };
-
     function handleCredentialResponse(response) {
       console.log('Encoded JWT ID token:', response.credential);
-
-      // You can now send the token to your backend for verification
+      alert('Logged in! Check console for token.');
+      // Send token to your backend here
     }
   </script>
+
 </body>
 </html>
