@@ -2,27 +2,78 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Google Sign-In Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login with Google</title>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    /* Basic reset */
+    * {
+      box-sizing: border-box;
+    }
+
+    body, html {
+      height: 100%;
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 40px 60px;
+      border-radius: 15px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      max-width: 360px;
+      width: 100%;
+    }
+
+    h1 {
+      margin-bottom: 24px;
+      font-weight: 700;
+      font-size: 2rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    p {
+      margin-bottom: 30px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #dcdcdc;
+    }
+
+    /* Style for the Google button container */
+    .g_id_signin {
+      display: inline-block;
+      width: 100%;
+    }
+  </style>
 </head>
 <body>
 
-  <h2>Google Sign-In Demo</h2>
+  <div class="login-container">
+    <h1>Welcome Back</h1>
+    <p>Sign in with your Google account to continue</p>
 
-  <!-- Google Sign-In button container -->
-  <div id="g_id_onload"
-       data-client_id="755429138864-fkb57r7p2thout8qupf5g0281d0ef21d.apps.googleusercontent.com"
-       data-callback="handleCredentialResponse"
-       data-auto_prompt="false">
+    <!-- Google Sign-In button -->
+    <div id="g_id_onload"
+         data-client_id="755429138864-fkb57r7p2thout8qupf5g0281d0ef21d.apps.googleusercontent.com"
+         data-callback="handleCredentialResponse"
+         data-auto_prompt="false">
+    </div>
+
+    <div class="g_id_signin" data-type="standard"></div>
   </div>
-
-  <div class="g_id_signin" data-type="standard"></div>
 
   <script>
     function handleCredentialResponse(response) {
       console.log('Encoded JWT ID token:', response.credential);
-      alert('Logged in! Check console for token.');
-      // Send token to your backend here
+      alert('Login successful! Check the console for your token.');
+      // You can send this token to your backend for verification here
     }
   </script>
 
