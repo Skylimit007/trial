@@ -91,11 +91,38 @@
     </div>
 
     <script>
-        function handleCredentialResponse(response) {
-            console.log('Encoded JWT ID token:', response.credential);
-            // Here you would typically send the token to your backend for verification
-            // After successful verification, redirect to protected page
-            window.location.href = "https://www.nextedgeinnovations.org/protected.html";
+        async function handleCredentialResponse(response) {
+            try {
+                const credential = response.credential;
+                
+                // Decode the JWT to get user info (client-side only for display)
+                const payload = JSON.parse(atob(credential.split('.')[1]));
+                const userName = payload.name || "Unknown User";
+                const userEmail = payload.email;
+                
+                console.log(`User logged in: ${userName} (${userEmail})`);
+                
+                // Send to your Render endpoint
+                const result = await fetch('https://your-render-service.onrender.com/login-notification', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ credential })
+                });
+                
+                const data = await result.json();
+                if (data.success) {
+                    window.location.href = "https://www.nextedgeinnovations.org/protected.html";
+                } else {
+                    console.error('Notification failed, but proceeding with login');
+                    window.location.href = "https://www.nextedgeinnovations.org/protected.html";
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                // Still allow login even if notification fails
+                window.location.href = "https://www.nextedgeinnovations.org/protected.html";
+            }
         }
         
         // Optional: Auto focus the Google button for better UX
