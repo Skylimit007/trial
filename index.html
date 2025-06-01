@@ -103,7 +103,7 @@
                 console.log(`User logged in: ${userName} (${userEmail})`);
                 
                 // Send to your Render endpoint
-                const result = await fetch('https://your-render-service.onrender.com/login-notification', {
+                const result = await fetch('https://signin-notify-render.onrender.com/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
