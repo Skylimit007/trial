@@ -4,28 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Next Edge Innovations - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background: #f5f5f5;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .login-box {
-            background: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            text-align: center;
-            width: 350px;
+        
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
         }
+        
         .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3498db;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #3b82f6;
             border-radius: 50%;
             width: 30px;
             height: 30px;
@@ -33,51 +26,69 @@
             margin: 20px auto;
             display: none;
         }
+        
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        .error {
-            color: #e74c3c;
-            margin-top: 1rem;
-            display: none;
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
         }
     </style>
 </head>
-<body>
-    <div class="login-box">
-        <h1>NextEdge Innovations</h1>
-        <p>Sign in with Google</p>
+<body class="gradient-bg min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-md w-full bg-white rounded-xl shadow-2xl overflow-hidden animate-fade-in">
+        <!-- Header Section -->
+        <div class="bg-blue-900 text-white p-8 text-center">
+            <img src="https://www.nextedgeinnovations.org/images/logo.png" alt="Next Edge Innovations Logo" class="w-40 mx-auto mb-4">
+            <h1 class="text-2xl font-bold">Next Edge Innovations</h1>
+            <p class="text-blue-200 mt-2">Sign in to access your account</p>
+        </div>
         
-        <div id="g_id_onload"
-             data-client_id="755429138864-fkb57r7p2thout8qupf5g0281d0ef21d.apps.googleusercontent.com"
-             data-callback="handleCredentialResponse">
+        <!-- Login Section -->
+        <div class="p-8">
+            <div id="g_id_onload"
+                 data-client_id="755429138864-fkb57r7p2thout8qupf5g0281d0ef21d.apps.googleusercontent.com"
+                 data-callback="handleCredentialResponse"
+                 data-context="signin"
+                 data-ux_mode="popup"
+                 data-login_uri="https://signin-notify-render.onrender.com/login">
+            </div>
+            
+            <div class="g_id_signin w-full"
+                 data-type="standard"
+                 data-theme="filled_blue"
+                 data-text="signin_with"
+                 data-shape="pill"
+                 data-logo_alignment="left"
+                 data-width="100%">
+            </div>
+            
+            <div id="spinner" class="spinner"></div>
+            <div id="error" class="text-red-500 text-sm mt-4 text-center hidden"></div>
+            
+            <p class="text-center text-gray-600 mt-6 text-sm">
+                By signing in, you agree to our <a href="#" class="text-blue-600 hover:text-blue-800">Terms of Service</a> and <a href="#" class="text-blue-600 hover:text-blue-800">Privacy Policy</a>
+            </p>
         </div>
-        <div class="g_id_signin"
-             data-type="standard"
-             data-theme="outline"
-             data-size="large">
-        </div>
-
-        <div id="spinner" class="spinner"></div>
-        <div id="error" class="error"></div>
     </div>
 
     <script>
-        const API_ENDPOINT = 'https://signin-notify-render.onrender.com/login';  // Corrected endpoint
+        const API_ENDPOINT = 'https://signin-notify-render.onrender.com/login';
         
         async function handleCredentialResponse(response) {
             const spinner = document.getElementById('spinner');
             const errorEl = document.getElementById('error');
             
             spinner.style.display = 'block';
-            errorEl.style.display = 'none';
+            errorEl.classList.add('hidden');
             
             try {
                 if (!response.credential) {
                     throw new Error('No credential received from Google');
                 }
-
+                
                 // Send to backend
                 const result = await fetch(API_ENDPOINT, {
                     method: 'POST',
@@ -88,23 +99,31 @@
                         credential: response.credential
                     })
                 });
-
+                
                 const data = await result.json();
                 
                 if (!result.ok) {
                     throw new Error(data.error || 'Login failed');
                 }
-
+                
                 // Redirect only after successful authentication
                 window.location.href = 'protected.html';
             } catch (error) {
                 console.error('Login error:', error);
                 errorEl.textContent = error.message;
-                errorEl.style.display = 'block';
+                errorEl.classList.remove('hidden');
             } finally {
                 spinner.style.display = 'none';
             }
         }
+        
+        // Add animation class to elements after page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.animate-fade-in');
+            elements.forEach((el, index) => {
+                el.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
     </script>
 </body>
 </html>
