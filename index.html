@@ -64,7 +64,7 @@
     </div>
 
     <script>
-        const API_ENDPOINT = 'https://signin-notify-render.onrender.com/';  // Changed to match backend route
+        const API_ENDPOINT = 'https://signin-notify-render.onrender.com/login';  // Corrected endpoint
         
         async function handleCredentialResponse(response) {
             const spinner = document.getElementById('spinner');
@@ -89,11 +89,13 @@
                     })
                 });
 
+                const data = await result.json();
+                
                 if (!result.ok) {
-                    const error = await result.json().catch(() => ({}));
-                    throw new Error(error.message || 'Login failed');
+                    throw new Error(data.error || 'Login failed');
                 }
 
+                // Redirect only after successful authentication
                 window.location.href = '/dashboard';
             } catch (error) {
                 console.error('Login error:', error);
