@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Home Page -->
   <url>
-    <loc>https://nextedgeinnovations.org/protected.html</loc>
+    <loc>https://nextedgeinnovations.org/index.html</loc>
     <priority>1.00</priority>
   </url>
 
@@ -14,7 +14,7 @@
 
   <!-- Applications Page -->
   <url>
-    <loc>https://nextedgeinnovations.org/applications.html</loc>
+    <loc>https://nextedgeinnovations.org/applications-login.html</loc>
     <priority>0.80</priority>
   </url>
 
@@ -38,13 +38,13 @@
 
    <!-- Applications Page -->
   <url>
-    <loc>https://nextedgeinnovations.org/applications.html</loc>
+    <loc>https://nextedgeinnovations.org/applications-login.html</loc>
     <priority>0.80</priority>
   </url>
 
    <!-- Tools Page -->
   <url>
-    <loc>https://nextedgeinnovations.org/tools.html</loc>
+    <loc>https://nextedgeinnovations.org/tools-login.html</loc>
     <priority>0.80</priority>
   </url>
   

@@ -38,79 +38,11 @@
       transform: translateY(-2px);
       color: #fff;
     }
-
-    #signin-container {
-      display: none; /* Hide sign-in container initially */
-    }
   </style>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2199569732417456"
      crossorigin="anonymous"></script>
-  <script>
-    function handleCredentialResponse(response) {
-      const userInfo = parseJwt(response.credential);
-      if (userInfo) {
-        sessionStorage.setItem("user", JSON.stringify(userInfo));
-        showProtectedContent();
-      }
-    }
-
-    function parseJwt(token) {
-      try {
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-        return JSON.parse(jsonPayload);
-      } catch (e) {
-        return null;
-      }
-    }
-
-    function showProtectedContent() {
-      document.getElementById('signin-container').style.display = 'none';
-      document.getElementById('protected-content').style.display = 'block';
-    }
-
-    function checkSignIn(downloadUrl) {
-      const user = sessionStorage.getItem("user");
-      if (user) {
-        window.location.href = downloadUrl; // Redirect to the download link
-      } else {
-        document.getElementById('signin-container').style.display = 'block'; // Show sign-in button
-        alert("Please sign in to download this application.");
-      }
-    }
-
-    window.onload = function() {
-      const user = sessionStorage.getItem("user");
-      if (user) {
-        showProtectedContent();
-      }
-    };
-  </script>
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body class="main-layout inner_page hosting_page">
-  <!-- Google Sign-In Button -->
-  <div id="signin-container">
-    <div id="g_id_onload"
-         data-client_id="755429138864-fkb57r7p2thout8qupf5g0281d0ef21d.apps.googleusercontent.com"
-         data-context="signin"
-         data-callback="handleCredentialResponse"
-         data-auto_prompt="false">
-    </div>
-
-    <div class="g_id_signin"
-         data-type="standard"
-         data-size="large"
-         data-theme="outline"
-         data-text="sign_in_with"
-         data-shape="rectangular"
-         data-logo_alignment="left">
-    </div>
-  </div>
-
   <!-- Loader -->
   <div class="loader_bg">
     <div class="loader"><img src="images/loading.gif" alt="#"/></div>
@@ -124,7 +56,7 @@
           <div class="full">
             <div class="center-desk">
               <div class="logo">
-                <a href="protected.html"><img src="images/logo.png" alt="#" /></a>
+                <a href="index.html"><img src="images/logo.png" alt="#" /></a>
               </div>
             </div>
           </div>
@@ -136,12 +68,12 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarsExample04">
               <ul class="navbar-nav mr-auto">
-                <li class="nav-item"><a class="nav-link" href="protected.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
                 <li class="nav-item"><a class="nav-link" href="hosting.html">Hosting</a></li>
                 <li class="nav-item"><a class="nav-link" href="domain.html">Domain</a></li>
-                <li class="nav-item"><a class="nav-link" href="tools.html">Tools</a></li>
-                <li class="nav-item active"><a class="nav-link" href="applications.html">Applications</a></li>
+                <li class="nav-item"><a class="nav-link" href="tools-login.html">Tools</a></li>
+                <li class="nav-item active"><a class="nav-link" href="applications-login.html">Applications</a></li>
                 <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
               </ul>
             </div>
@@ -182,7 +114,7 @@
               <p>1. Download the zip file.<br>2. Extract it.<br>3. Run the program.</p>
               <h4>Usage</h4>
               <p>The program does not need any specific permissions or dependencies.</p>
-              <a href="#" class="btn btn-primary mt-2" onclick="checkSignIn('https://mega.nz/file/4ZAU0CyL#zuGz3Iguy8mV0Q-eckqdc-OP4j52bKBISnYH0XP64tM')">Download</a>
+              <a href="https://mega.nz/file/4ZAU0CyL#zuGz3Iguy8mV0Q-eckqdc-OP4j52bKBISnYH0XP64tM" class="btn btn-primary mt-2">Download</a>
             </div>
           </div>
         </div>
@@ -208,7 +140,7 @@
               <p>1. Download the zip file.<br>2. Extract it.<br>3. Run the program.</p>
               <h4>Usage</h4>
               <p>The program does not need any specific permissions or dependencies.</p>
-              <a href="#" class="btn btn-primary mt-2" onclick="checkSignIn('https://mega.nz/file/odAwybIY#d6UO_-5o0ahwVBnZk2n-AGRlhBi8dNhRqSslHdZ6U9o')">Download</a>
+              <a href="https://mega.nz/file/odAwybIY#d6UO_-5o0ahwVBnZk2n-AGRlhBi8dNhRqSslHdZ6U9o" class="btn btn-primary mt-2">Download</a>
             </div>
           </div>
         </div>
@@ -234,7 +166,7 @@
               <p>1. Download the APK.<br>2. Disable Play Protect from the playstore settings.<br>3. Install the latest version of Manager ReVanced.<br>4. Open the app and install micro G then ReVanced YouTube Music from the manager.<br>5. Enjoy Ad-Free music!!</p>
               <h4>Usage</h4>
               <p>After all installations, log in to your Gmail account on micro G then run the YouTube Music app.</p>
-              <a href="#" class="btn btn-primary mt-2" onclick="checkSignIn('https://mega.nz/file/MUwSlYyQ#IBX6VFaeLmgTSexPCEo4jm-r2d9XVGtseUh8vJhmHZk')">Download</a>
+              <a href="https://mega.nz/file/MUwSlYyQ#IBX6VFaeLmgTSexPCEo4jm-r2d9XVGtseUh8vJhmHZk" class="btn btn-primary mt-2">Download</a>
             </div>
           </div>
         </div>
@@ -265,7 +197,7 @@
               <h3>Get Support.</h3>
               <ul class="conta">
                 <li><i class="fa fa-map-marker" aria-hidden="true"></i>Address: Madaraka, Nairobi</li>
-                <li><i class="fa fa-phone" aria-hidden="true"></i><a href="tel:+254106506937">+254 106 506 937</a></li>
+                <li><i class="fa fa-phone" aria-hidden="true"></i><a href="tel:+254700298334">+254700298334</a></li>
                 <li><i class="fa fa-envelope" aria-hidden="true"></i><a href="mailto:admin@nextedgeinnovations.org">admin@nextedgeinnovations.org</a></li>
               </ul>
             </div>
@@ -274,10 +206,10 @@
             <div class="infoma">
               <h3>Company.</h3>
               <ul class="menu_footer">
-                <li><a href="protected.html">Home</a></li>
+                <li><a href="index.html">Home</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="domain.html">Domain</a></li>
-                <li><a href="applications.html">Applications</a></li>
+                <li><a href="applications-login.html">Applications</a></li>
                 <li><a href="hosting.html">Hosting</a></li>
                 <li><a href="contact.html">Contact</a></li>
               </ul>

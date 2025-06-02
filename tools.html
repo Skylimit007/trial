@@ -38,79 +38,11 @@
       transform: translateY(-2px);
       color: #fff;
     }
-
-    #signin-container {
-      display: none; /* Hide sign-in container initially */
-    }
   </style>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2199569732417456"
      crossorigin="anonymous"></script>
-  <script>
-    function handleCredentialResponse(response) {
-      const userInfo = parseJwt(response.credential);
-      if (userInfo) {
-        sessionStorage.setItem("user", JSON.stringify(userInfo));
-        showProtectedContent();
-      }
-    }
-
-    function parseJwt(token) {
-      try {
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-        return JSON.parse(jsonPayload);
-      } catch (e) {
-        return null;
-      }
-    }
-
-    function showProtectedContent() {
-      document.getElementById('signin-container').style.display = 'none';
-      document.getElementById('protected-content').style.display = 'block';
-    }
-
-    function checkSignIn(downloadUrl) {
-      const user = sessionStorage.getItem("user");
-      if (user) {
-        window.location.href = downloadUrl; // Redirect to the download link
-      } else {
-        document.getElementById('signin-container').style.display = 'block'; // Show sign-in button
-        alert("Please sign in to run this application.");
-      }
-    }
-
-    window.onload = function() {
-      const user = sessionStorage.getItem("user");
-      if (user) {
-        showProtectedContent();
-      }
-    };
-  </script>
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body class="main-layout inner_page hosting_page">
-  <!-- Google Sign-In Button -->
-  <div id="signin-container">
-    <div id="g_id_onload"
-         data-client_id="755429138864-fkb57r7p2thout8qupf5g0281d0ef21d.apps.googleusercontent.com"
-         data-context="signin"
-         data-callback="handleCredentialResponse"
-         data-auto_prompt="false">
-    </div>
-
-    <div class="g_id_signin"
-         data-type="standard"
-         data-size="large"
-         data-theme="outline"
-         data-text="sign_in_with"
-         data-shape="rectangular"
-         data-logo_alignment="left">
-    </div>
-  </div>
-
   <!-- Loader -->
   <div class="loader_bg">
     <div class="loader"><img src="images/loading.gif" alt="#"/></div>
@@ -124,7 +56,7 @@
           <div class="full">
             <div class="center-desk">
               <div class="logo">
-                <a href="protected.html"><img src="images/logo.png" alt="#" /></a>
+                <a href="index.html"><img src="images/logo.png" alt="#" /></a>
               </div>
             </div>
           </div>
@@ -136,12 +68,12 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarsExample04">
               <ul class="navbar-nav mr-auto">
-                <li class="nav-item"><a class="nav-link" href="protected.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
                 <li class="nav-item"><a class="nav-link" href="hosting.html">Hosting</a></li>
                 <li class="nav-item"><a class="nav-link" href="domain.html">Domain</a></li>
                 <li class="nav-item"><a class="nav-link" href="contact.html">Tools</a></li>
-                <li class="nav-item active"><a class="nav-link" href="applications.html">Applications</a></li>
+                <li class="nav-item active"><a class="nav-link" href="applications-login.html">Applications</a></li>
                 <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
               </ul>
             </div>
@@ -165,12 +97,12 @@
           <div class="order-box_main app-box">
             <div class="order-box text_align_center">
               <h3>SEO Audit Tool</h3>
-              <p>Analyze your website’s SEO health and performance in seconds</p>
+              <p>Analyze your website's SEO health and performance in seconds</p>
               <a href="#app1-details" data-toggle="collapse" class="read_more"><i class="fa fa-eye" aria-hidden="true"></i> View Details</a>
             </div>
             <div id="app1-details" class="collapse app-details mt-3">
               <h4>Overview</h4>
-              <p>The SEO Audit Tool by Next Edge Innovations is a web-based application designed to analyze the SEO health of your website. With just a few clicks, it checks crucial SEO elements such as page titles, meta descriptions, heading tags, content length, image alt attributes, internal and external links, and DNS records. The tool generates a detailed report highlighting strengths, weaknesses, and actionable recommendations to enhance your website’s search engine visibility and ranking.</p>
+              <p>The SEO Audit Tool by Next Edge Innovations is a web-based application designed to analyze the SEO health of your website. With just a few clicks, it checks crucial SEO elements such as page titles, meta descriptions, heading tags, content length, image alt attributes, internal and external links, and DNS records. The tool generates a detailed report highlighting strengths, weaknesses, and actionable recommendations to enhance your website's search engine visibility and ranking.</p>
               <h4>Features</h4>
               <ul>
                 <li>Title Tag Analysis: Checks presence and optimal length of page titles.</li>
@@ -179,11 +111,34 @@
                 <li>Content Length Assessment:</li>
                 <li>Image Alt Text Check: Detects images missing alt attributes. etc</li>
               </ul>
-              <a href="#" class="btn btn-primary mt-2" onclick="checkSignIn('https://seo-auditor.onrender.com/')">Run App</a>
+              <a href="https://seo-auditor.onrender.com/" class="btn btn-primary mt-2">Run App</a>
             </div>
           </div>
         </div>
         <!-- Application 2 -->
+                 <div class="col-md-4">
+          <div class="order-box_main app-box">
+            <div class="order-box text_align_center">
+              <h3>Vulnerability Analysis Tool</h3>
+              <p>Analyze your website's SEO health and performance in seconds</p>
+              <a href="#app2-details" data-toggle="collapse" class="read_more"><i class="fa fa-eye" aria-hidden="true"></i> View Details</a>
+            </div>
+            <div id="app2-details" class="collapse app-details mt-3">
+              <h4>Overview</h4>
+              <p>The Vulnerability Scanner by Next Edge Innovations is a web-based application designed to assess the security posture of your website. With minimal setup, it scans for potential vulnerabilities including outdated software, misconfigurations, open ports, and other security flaws. The tool generates a comprehensive report, outlining vulnerabilities found, potential risks, and actionable remediation steps to strengthen your website’s security and protect against cyber threats.</p>
+              <h4>Features</h4>
+              <ul>
+                <li>Port Scanning: Identifies open ports and associated services to highlight potential entry points.</li>
+                <li>Outdated Software Detection: Flags outdated web servers, libraries, or frameworks that may pose security risks.</li>
+                <li>SSL/TLS Configuration Check: Assesses the configuration of your SSL/TLS certificates to ensure secure communications.</li>
+                <li>Vulnerability Detection: Identifies known vulnerabilities (CVEs) associated with your technology stack.</li>
+                <li>Actionable Recommendations: Provides clear, prioritized steps to remediate vulnerabilities and enhance security.</li>
+              </ul>
+              <a href="https://vulnerability-scanner-bh7u.onrender.com/" class="btn btn-primary mt-2">Run App</a>
+            </div>
+          </div>
+        </div>
+        <!-- Application 3 -->
       </div>
     </div>
   </div>
@@ -211,7 +166,7 @@
               <h3>Get Support.</h3>
               <ul class="conta">
                 <li><i class="fa fa-map-marker" aria-hidden="true"></i>Address: Madaraka, Nairobi</li>
-                <li><i class="fa fa-phone" aria-hidden="true"></i><a href="tel:+254106506937">+254 106 506 937</a></li>
+                <li><i class="fa fa-phone" aria-hidden="true"></i><a href="tel:+254700298334">+254700298334</a></li>
                 <li><i class="fa fa-envelope" aria-hidden="true"></i><a href="mailto:admin@nextedgeinnovations.org">admin@nextedgeinnovations.org</a></li>
               </ul>
             </div>
@@ -220,11 +175,11 @@
             <div class="infoma">
               <h3>Company.</h3>
               <ul class="menu_footer">
-                <li><a href="protected.html">Home</a></li>
+                <li><a href="index.html">Home</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="domain.html">Domain</a></li>
-                <li><a href="tools.html">Tools</a></li>
-                <li><a href="applications.html">Applications</a></li>
+                <li><a href="tools-login.html">Tools</a></li>
+                <li><a href="applications-login.html">Applications</a></li>
                 <li><a href="hosting.html">Hosting</a></li>
                 <li><a href="contact.html">Contact</a></li>
               </ul>
