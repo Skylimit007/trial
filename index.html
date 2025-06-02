@@ -96,7 +96,7 @@
                 }
 
                 // Redirect only after successful authentication
-                window.location.href = '/dashboard';
+                window.location.href = '/protected.html';
             } catch (error) {
                 console.error('Login error:', error);
                 errorEl.textContent = error.message;
