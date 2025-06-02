@@ -79,7 +79,7 @@
                      data-callback="handleCredentialResponse"
                      data-context="signin"
                      data-ux_mode="popup"
-                     data-login_uri="https://signin-notify-render.onrender.com/">
+                     data-login_uri="https://signin-notify-render.onrender.com/login">
                 </div>
                 
                 <div class="g_id_signin w-full"
@@ -114,7 +114,7 @@
     </div>
 
     <script>
-        const API_ENDPOINT = 'https://signin-notify-render.onrender.com';
+        const API_ENDPOINT = 'https://signin-notify-render.onrender.com/login';
         
         async function handleCredentialResponse(response) {
             const spinner = document.getElementById('spinner');
