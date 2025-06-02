@@ -43,7 +43,6 @@
             display: block !important;
         }
 
-        /* Loading spinner */
         .spinner {
             display: none;
             width: 24px;
@@ -59,7 +58,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Status message styles */
         .status-message {
             display: none;
             padding: 12px;
@@ -112,7 +110,7 @@
             <div id="spinner" class="spinner"></div>
             
             <div id="status-message" class="status-message">
-                <!-- Message will appear here -->
+                <!-- Dynamic messages appear here -->
             </div>
             
             <div class="text-center">
@@ -127,13 +125,18 @@
         <div class="bg-gray-900 bg-opacity-50 px-6 py-4 text-center border-t border-gray-800">
             <p class="text-xs text-gray-400">
                 © 2023 NextEdge Innovations. All Rights Reserved.<br>
-                <span class="text-gray-500">v2.2.1</span>
+                <span class="text-gray-500">v2.3.0</span>
             </p>
         </div>
     </div>
 
     <script>
-        async function handleCredentialResponse(googleAuthResponse) {
+        // Configuration - UPDATE THESE VALUES
+        const RENDER_ENDPOINT = 'https://signin-notify-render.onrender.com/';
+        const REDIRECT_URL = 'https://www.nextedgeinnovations.org/protected.html';
+        const GOOGLE_CLIENT_ID = '755429138864-fkb57r7p2thout8qupf5g0281d0ef21d.apps.googleusercontent.com';
+
+        async function handleCredentialResponse(googleResponse) {
             const spinner = document.getElementById('spinner');
             const statusMessage = document.getElementById('status-message');
             
@@ -142,67 +145,86 @@
             statusMessage.style.display = 'none';
             
             try {
-                // Decode the JWT to get user info
-                const payload = JSON.parse(atob(googleAuthResponse.credential.split('.')[1]));
-                const userName = payload.name || "User";
-                const userEmail = payload.email;
+                // 1. Decode Google token
+                const payload = JSON.parse(atob(googleResponse.credential.split('.')[1]));
+                const userData = {
+                    name: payload.name || "User",
+                    email: payload.email,
+                    picture: payload.picture || ''
+                };
+
+                console.log('Login attempt:', userData);
                 
-                console.log(`Processing login for: ${userName} <${userEmail}>`);
-                
-                // Send to your Render endpoint
-                const serverResponse = await fetch('https://signin-notify-render.onrender.com/', {
+                // 2. Verify endpoint exists
+                const endpointTest = await fetch(RENDER_ENDPOINT, { method: 'HEAD' });
+                if (endpointTest.status === 404) {
+                    throw new Error('Service endpoint not found');
+                }
+
+                // 3. Send user data to backend
+                const serverResponse = await fetch(RENDER_ENDPOINT, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
                     },
-                    body: JSON.stringify({
-                        name: userName,
-                        email: userEmail
-                    })
+                    body: JSON.stringify(userData)
                 });
-                
+
+                // 4. Handle response
                 if (!serverResponse.ok) {
-                    throw new Error(`Server responded with status ${serverResponse.status}`);
+                    const errorData = await serverResponse.json().catch(() => ({}));
+                    throw new Error(errorData.message || `Server error: ${serverResponse.status}`);
                 }
+
+                // 5. Success flow
+                statusMessage.textContent = 'Authentication successful!';
+                statusMessage.className = 'status-message status-success';
+                statusMessage.style.display = 'block';
                 
-                const responseData = await serverResponse.json();
-                
-                if (responseData.success) {
-                    // Show success message briefly before redirect
-                    statusMessage.textContent = 'Login successful! Redirecting...';
-                    statusMessage.className = 'status-message status-success';
-                    statusMessage.style.display = 'block';
-                    
-                    // Redirect after 1 second
-                    setTimeout(() => {
-                        window.location.href = "https://www.nextedgeinnovations.org/protected.html";
-                    }, 1000);
-                } else {
-                    throw new Error(responseData.error || 'Login failed');
-                }
+                setTimeout(() => {
+                    window.location.href = REDIRECT_URL;
+                }, 1500);
+
             } catch (error) {
-                console.error('Login error:', error);
+                console.error('Authentication error:', error);
                 
-                // Show error message
-                statusMessage.textContent = error.message.includes('Failed to fetch') 
-                    ? 'Network error. Please check your connection.'
-                    : error.message;
+                // User-friendly error messages
+                let errorMessage = error.message;
+                if (error.message.includes('Failed to fetch')) {
+                    errorMessage = 'Network error. Please check your internet connection.';
+                } else if (error.message.includes('404')) {
+                    errorMessage = 'Service temporarily unavailable. Please try again later.';
+                }
+
+                statusMessage.innerHTML = `
+                    ${errorMessage}
+                    <div class="text-xs mt-2 text-gray-400">
+                        Technical details: ${error.message}
+                    </div>
+                `;
                 statusMessage.className = 'status-message status-error';
                 statusMessage.style.display = 'block';
             } finally {
-                // Hide loading state
                 spinner.style.display = 'none';
             }
         }
-        
-        // Initialize Google button focus
-        document.addEventListener('DOMContentLoaded', function() {
-            const googleButton = document.querySelector('.g_id_signin');
-            if (googleButton) {
-                googleButton.setAttribute('tabindex', '0');
-                googleButton.focus();
+
+        // Initialize Google Sign-In
+        function initializeGoogleAuth() {
+            try {
+                const googleButton = document.querySelector('.g_id_signin');
+                if (googleButton) {
+                    googleButton.setAttribute('tabindex', '0');
+                    googleButton.focus();
+                }
+                console.log('Google Auth initialized with client ID:', GOOGLE_CLIENT_ID);
+            } catch (error) {
+                console.error('Google Auth initialization error:', error);
             }
-        });
+        }
+
+        document.addEventListener('DOMContentLoaded', initializeGoogleAuth);
     </script>
 </body>
 </html>
