@@ -7,13 +7,15 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         
-        .animate-fade-in {
-            animation: fadeIn 0.6s ease-out forwards;
+        .gradient-animate {
+            background-size: 200% 200%;
+            animation: gradient-shift 15s ease infinite;
         }
         
         .spinner {
@@ -32,45 +34,82 @@
             100% { transform: rotate(360deg); }
         }
         
-        .gradient-bg {
-            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .input-focus:focus {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
         }
     </style>
 </head>
-<body class="gradient-bg min-h-screen flex items-center justify-center p-4">
-    <div class="max-w-md w-full bg-white rounded-xl shadow-2xl overflow-hidden animate-fade-in">
-        <!-- Header Section -->
-        <div class="bg-blue-900 text-white p-8 text-center">
-            <img src="https://www.nextedgeinnovations.org/images/logo.png" alt="Next Edge Innovations Logo" class="w-40 mx-auto mb-4">
-            <h1 class="text-2xl font-bold">Next Edge Innovations</h1>
-            <p class="text-blue-200 mt-2">Sign in to access our website</p>
+<body class="min-h-screen flex items-center justify-center p-4 bg-gray-100">
+    <div class="fixed inset-0 overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500 gradient-animate opacity-90"></div>
+    </div>
+    
+    <!-- Main Card -->
+    <div class="w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden card-hover z-10">
+        <!-- Header with logo -->
+        <div class="bg-blue-900 p-8 text-center relative overflow-hidden">
+            <div class="absolute inset-0 opacity-20 bg-gradient-to-r from-blue-600 to-blue-400"></div>
+            <div class="relative z-10">
+                <img src="https://www.nextedgeinnovations.org/images/logo.png" alt="Next Edge Innovations Logo" class="w-32 mx-auto mb-4">
+                <h1 class="text-2xl font-bold text-white">Next Edge Innovations</h1>
+                <p class="text-blue-200 mt-1">Sign in to continue your journey</p>
+            </div>
         </div>
         
-        <!-- Login Section -->
+        <!-- Login Form -->
         <div class="p-8">
-            <div id="g_id_onload"
-                 data-client_id="755429138864-fkb57r7p2thout8qupf5g0281d0ef21d.apps.googleusercontent.com"
-                 data-callback="handleCredentialResponse"
-                 data-context="signin"
-                 data-ux_mode="popup"
-                 data-login_uri="https://signin-notify-render.onrender.com/login">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-1">Welcome back</h2>
+                <p class="text-gray-600 text-sm">Sign in with your Google account to access the platform</p>
             </div>
             
-            <div class="g_id_signin w-full"
-                 data-type="standard"
-                 data-theme="filled_blue"
-                 data-text="signin_with"
-                 data-shape="pill"
-                 data-logo_alignment="left"
-                 data-width="100%">
+            <!-- Google Sign-in Button -->
+            <div class="mb-6">
+                <div id="g_id_onload"
+                     data-client_id="755429138864-fkb57r7p2thout8qupf5g0281d0ef21d.apps.googleusercontent.com"
+                     data-callback="handleCredentialResponse"
+                     data-context="signin"
+                     data-ux_mode="popup"
+                     data-login_uri="https://signin-notify-render.onrender.com/login">
+                </div>
+                
+                <div class="g_id_signin w-full"
+                     data-type="standard"
+                     data-theme="filled_blue"
+                     data-text="signin_with"
+                     data-shape="pill"
+                     data-logo_alignment="left"
+                     data-width="100%">
+                </div>
             </div>
             
+            <!-- Spinner and error message -->
             <div id="spinner" class="spinner"></div>
             <div id="error" class="text-red-500 text-sm mt-4 text-center hidden"></div>
             
-            <p class="text-center text-gray-600 mt-6 text-sm">
-                By signing in, you agree to our <a href="#" class="text-blue-600 hover:text-blue-800">Terms of Service</a> and <a href="#" class="text-blue-600 hover:text-blue-800">Privacy Policy</a>
-            </p>
+            <!-- Divider -->
+            <div class="flex items-center my-6">
+                <div class="flex-grow border-t border-gray-200"></div>
+                <span class="flex-shrink mx-4 text-gray-400 text-sm">OR</span>
+                <div class="flex-grow border-t border-gray-200"></div>
+            </div>
+            
+            <!-- Alternative login options -->
+            <div class="text-center">
+                <p class="text-gray-600 text-sm">Having trouble? <a href="#" class="text-blue-600 hover:text-blue-800">Contact support</a></p>
+                <p class="text-gray-500 text-xs mt-6">
+                    By signing in, you agree to our <a href="#" class="text-blue-600 hover:text-blue-800">Terms</a> and <a href="#" class="text-blue-600 hover:text-blue-800">Privacy Policy</a>
+                </p>
+            </div>
         </div>
     </div>
 
@@ -116,14 +155,6 @@
                 spinner.style.display = 'none';
             }
         }
-        
-        // Add animation class to elements after page load
-        document.addEventListener('DOMContentLoaded', () => {
-            const elements = document.querySelectorAll('.animate-fade-in');
-            elements.forEach((el, index) => {
-                el.style.animationDelay = `${index * 0.1}s`;
-            });
-        });
     </script>
 </body>
 </html>
