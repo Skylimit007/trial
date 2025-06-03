@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Next Edge Innovations - Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Changed Google script loading -->
-    <script src="https://accounts.google.com/gsi/client"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <link rel="icon" href="images/logo.png" type="image/gif" />
     <style>
-        /* Your existing styles here */
         #loading {
             position: fixed;
             top: 0;
@@ -28,7 +26,6 @@
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4 bg-gray-100">
-    <!-- Loading overlay -->
     <div id="loading">
         <div class="text-center">
             <div class="spinner" style="display: block;"></div>
@@ -36,13 +33,13 @@
         </div>
     </div>
     
-    <!-- Main Content -->
     <div id="main-content" class="hidden w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden card-hover z-10">
-        <!-- Your existing content here -->
+        <h1 class="text-2xl font-bold text-center">Login</h1>
+        <div id="g_id_onload" data-client_id="YOUR_CLIENT_ID" data-callback="handleCredentialResponse"></div>
+        <div class="g_id_signin" data-type="standard"></div>
     </div>
 
     <script>
-        // 1. First make sure basic elements exist
         function verifyCriticalElements() {
             const requiredElements = ['loading', 'main-content'];
             requiredElements.forEach(id => {
@@ -54,7 +51,6 @@
             });
         }
 
-        // 2. Initialize the page when ready
         function initializePage() {
             console.log("Initializing page...");
             document.getElementById('loading').classList.add('hidden');
@@ -65,48 +61,61 @@
             }
         }
 
-        // 3. Check if Google loaded
         function checkGoogleReady() {
-            if (window.google && google.accounts) {
-                console.log("Google Identity Services loaded");
-                initializePage();
-                return true;
-            }
-            return false;
+            return window.google && google.accounts;
         }
 
-        // 4. DOM Ready handler
+        function handleCredentialResponse(response) {
+            console.log("Encoded JWT ID token: " + response.credential);
+            // Here you would typically send the token to your server for verification
+            // For example:
+            // fetch('/api/auth/google', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify({ id_token: response.credential })
+            // })
+            // .then(response => response.json())
+            // .then(data => {
+            //     if (data.success) {
+            //         sessionStorage.setItem('nei_authenticated', true);
+            //         window.location.href = 'tools.html';
+            //     } else {
+            //         console.error('Authentication failed:', data.message);
+            //     }
+            // });
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             console.log("DOM fully loaded");
             verifyCriticalElements();
             
-            // Try to initialize immediately
-            if (checkGoogleReady()) return;
-            
-            // If Google isn't ready, start polling
-            let attempts = 0;
-            const googleCheckInterval = setInterval(() => {
-                attempts++;
-                if (checkGoogleReady()) {
-                    clearInterval(googleCheckInterval);
-                } else if (attempts > 10) { // 5 second timeout (500ms * 10)
-                    console.warn("Google script didn't load - showing page anyway");
-                    clearInterval(googleCheckInterval);
-                    initializePage();
-                }
-            }, 500);
+            if (checkGoogleReady()) {
+                initializePage();
+            } else {
+                let attempts = 0;
+                const googleCheckInterval = setInterval(() => {
+                    attempts++;
+                    if (checkGoogleReady()) {
+                        clearInterval(googleCheckInterval);
+                        initializePage();
+                    } else if (attempts > 10) {
+                        console.warn("Google script didn't load - showing page anyway");
+                        clearInterval(googleCheckInterval);
+                        initializePage();
+                    }
+                }, 500);
+            }
         });
 
-        // 5. Fallback timeout in case everything fails
         setTimeout(() => {
             if (document.getElementById('loading') && 
                 !document.getElementById('loading').classList.contains('hidden')) {
                 console.warn("Fallback timeout reached - forcing page show");
                 initializePage();
             }
-        }, 5000); // 5 second absolute timeout
-
-        // Your existing handleCredentialResponse and sendSignInNotification functions
+        }, 5000);
     </script>
 </body>
 </html>
