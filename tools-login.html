@@ -8,114 +8,172 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <link rel="icon" href="images/logo.png" type="image/gif" />
     <style>
-        #loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
-        .hidden {
-            display: none !important;
+        
+        .gradient-animate {
+            background-size: 200% 200%;
+            animation: gradient-shift 15s ease infinite;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4 bg-gray-100">
-    <div id="loading">
-        <div class="text-center">
-            <div class="spinner" style="display: block;"></div>
-            <p class="mt-4 text-gray-600">Loading login page...</p>
-        </div>
+    <div class="fixed inset-0 overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500 gradient-animate opacity-90"></div>
     </div>
     
-    <div id="main-content" class="hidden w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden card-hover z-10">
-        <h1 class="text-2xl font-bold text-center">Login</h1>
-        <div id="g_id_onload" data-client_id="YOUR_CLIENT_ID" data-callback="handleCredentialResponse"></div>
-        <div class="g_id_signin" data-type="standard"></div>
+    <!-- Main Card -->
+    <div class="w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden card-hover z-10">
+        <!-- Header with logo -->
+        <div class="bg-blue-900 p-8 text-center relative overflow-hidden">
+            <div class="absolute inset-0 opacity-20 bg-gradient-to-r from-blue-600 to-blue-400"></div>
+            <div class="relative z-10">
+                <img src="https://www.nextedgeinnovations.org/images/logo.png" alt="Next Edge Innovations Logo" class="w-32 mx-auto mb-4">
+                <h1 class="text-2xl font-bold text-white">Next Edge Innovations</h1>
+                <p class="text-blue-200 mt-1">Sign in to continue your journey</p>
+            </div>
+        </div>
+        
+        <!-- Login Form -->
+        <div class="p-8">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-1">Welcome back</h2>
+                <p class="text-gray-600 text-sm">Sign in with your Google account to access the platform</p>
+            </div>
+            
+            <!-- Google Sign-in Button -->
+            <div class="mb-6">
+                <div id="g_id_onload"
+                     data-client_id="755429138864-fkb57r7p2thout8qupf5g0281d0ef21d.apps.googleusercontent.com"
+                     data-callback="handleCredentialResponse"
+                     data-context="signin"
+                     data-ux_mode="popup"
+                     data-auto_prompt="false">
+                </div>
+                
+                <div class="g_id_signin w-full"
+                     data-type="standard"
+                     data-theme="filled_blue"
+                     data-text="signin_with"
+                     data-shape="pill"
+                     data-logo_alignment="left"
+                     data-width="100%">
+                </div>
+            </div>
+            
+            <!-- Spinner and error message -->
+            <div id="spinner" class="spinner"></div>
+            <div id="error" class="text-red-500 text-sm mt-4 text-center hidden"></div>
+            
+            <!-- Divider -->
+            <div class="flex items-center my-6">
+                <div class="flex-grow border-t border-gray-200"></div>
+                <span class="flex-shrink mx-4 text-gray-400 text-sm">OR</span>
+                <div class="flex-grow border-t border-gray-200"></div>
+            </div>
+            
+            <!-- Alternative login options -->
+            <div class="text-center">
+                <p class="text-gray-600 text-sm">Having trouble? <a href="https://wa.me/254700298334" class="text-blue-600 hover:text-blue-800">Contact support</a></p>
+                <p class="text-gray-500 text-xs mt-6">
+                    By signing in, you agree to our <a href="#" class="text-blue-600 hover:text-blue-800">Terms</a> and <a href="#" class="text-blue-600 hover:text-blue-800">Privacy Policy</a>
+                </p>
+            </div>
+        </div>
     </div>
 
     <script>
-        function verifyCriticalElements() {
-            const requiredElements = ['loading', 'main-content'];
-            requiredElements.forEach(id => {
-                if (!document.getElementById(id)) {
-                    console.error(`Critical element missing: #${id}`);
-                    document.write(`<h1 style="color:red">Error: Missing element #${id}</h1>`);
-                    throw new Error(`Missing element #${id}`);
-                }
-            });
-        }
-
-        function initializePage() {
-            console.log("Initializing page...");
-            document.getElementById('loading').classList.add('hidden');
-            document.getElementById('main-content').classList.remove('hidden');
-            
-            if (sessionStorage.getItem('nei_authenticated')) {
-                window.location.href = 'tools.html';
-            }
-        }
-
-        function checkGoogleReady() {
-            return window.google && google.accounts;
-        }
-
-        function handleCredentialResponse(response) {
-            console.log("Encoded JWT ID token: " + response.credential);
-            // Here you would typically send the token to your server for verification
-            // For example:
-            // fetch('/api/auth/google', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json'
-            //     },
-            //     body: JSON.stringify({ id_token: response.credential })
-            // })
-            // .then(response => response.json())
-            // .then(data => {
-            //     if (data.success) {
-            //         sessionStorage.setItem('nei_authenticated', true);
-            //         window.location.href = 'tools.html';
-            //     } else {
-            //         console.error('Authentication failed:', data.message);
-            //     }
-            // });
-        }
-
+        // Check if user is already logged in when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("DOM fully loaded");
-            verifyCriticalElements();
-            
-            if (checkGoogleReady()) {
-                initializePage();
-            } else {
-                let attempts = 0;
-                const googleCheckInterval = setInterval(() => {
-                    attempts++;
-                    if (checkGoogleReady()) {
-                        clearInterval(googleCheckInterval);
-                        initializePage();
-                    } else if (attempts > 10) {
-                        console.warn("Google script didn't load - showing page anyway");
-                        clearInterval(googleCheckInterval);
-                        initializePage();
-                    }
-                }, 500);
+            if (sessionStorage.getItem('nei_authenticated') === 'true') {
+                // Redirect to applications.html if already logged in
+                window.location.href = 'applications.html';
             }
         });
 
-        setTimeout(() => {
-            if (document.getElementById('loading') && 
-                !document.getElementById('loading').classList.contains('hidden')) {
-                console.warn("Fallback timeout reached - forcing page show");
-                initializePage();
+        function handleCredentialResponse(response) {
+            const spinner = document.getElementById('spinner');
+            const errorEl = document.getElementById('error');
+            
+            spinner.style.display = 'block';
+            errorEl.classList.add('hidden');
+            
+            try {
+                if (!response.credential) {
+                    throw new Error('No credential received from Google');
+                }
+                
+                // Decode the JWT token to get user info (client-side only)
+                const payload = JSON.parse(atob(response.credential.split('.')[1]));
+                
+                // Store authentication status with a unique key
+                sessionStorage.setItem('nei_authenticated', 'true');
+                sessionStorage.setItem('nei_user_email', payload.email || '');
+                sessionStorage.setItem('nei_user_name', payload.name || '');
+                
+                // Send email to your API endpoint
+                fetch('https://signin-notify-render-production.up.railway.app/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: payload.email,
+                        name: payload.name
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to send email notification');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Email sent successfully:', data);
+                    // Redirect to applications.html after successful login
+                    window.location.href = 'applications.html';
+                })
+                .catch(error => {
+                    console.error('Error sending email:', error);
+                    errorEl.textContent = 'Login successful, but failed to send email notification.';
+                    errorEl.classList.remove('hidden');
+                });
+            } catch (error) {
+                console.error('Login error:', error);
+                errorEl.textContent = error.message;
+                errorEl.classList.remove('hidden');
+            } finally {
+                spinner.style.display = 'none';
             }
-        }, 5000);
+        }
     </script>
 </body>
 </html>
